@@ -23,15 +23,15 @@ public class DeleteUserHandler : IRequestHandler<DeleteUserRequest, DeleteUserRe
 
     public async Task<DeleteUserResponse> Handle(DeleteUserRequest request, CancellationToken cancellationToken)
     {
-        ArquiteturaDesafio.Core.Domain.Entities.User user = await _userRepository.Get(request.Id, cancellationToken);
+        ArquiteturaDesafio.Core.Domain.Entities.User user = await _userRepository.Get(request.id, cancellationToken);
 
         if (user is null)
         {
-            throw new KeyNotFoundException($"Usuario não encontrado. Id: {request.Id}");
+            throw new KeyNotFoundException($"Usuario não encontrado. Id: {request.id}");
         }
 
         _userRepository.Delete(user);
         await _unitOfWork.Commit(cancellationToken);
-        return _mapper.Map<DeleteUserResponse>(user);
+        return new DeleteUserResponse("Usuário deletado com sucesso");
     }
 }

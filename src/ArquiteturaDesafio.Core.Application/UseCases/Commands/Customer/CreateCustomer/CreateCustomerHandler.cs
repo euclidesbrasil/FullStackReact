@@ -36,6 +36,6 @@ public class CreateCustomerHandler :
         var customer = _mapper.Map<ArquiteturaDesafio.Core.Domain.Entities.Customer>(request);
         _customerRepository.Create(customer);
         await _unitOfWork.Commit(cancellationToken);
-        return _mapper.Map<CreateCustomerResponse>(customer);
+        return new CreateCustomerResponse(customer.Id);
     }
 }

@@ -31,7 +31,7 @@ namespace ArquiteturaDesafio.Tests.Application.Handlers
         {
             // Arrange
             var id = Guid.NewGuid();
-            var request = new DeleteUserRequest(new Core.Application.UseCases.DTOs.UserDTO() { Id = id });
+            var request = new DeleteUserRequest(id);
             var user = new Core.Domain.Entities.User(id);
             _userRepository.Get(id, CancellationToken.None).Returns(Task.FromResult(user));
 
@@ -42,7 +42,7 @@ namespace ArquiteturaDesafio.Tests.Application.Handlers
             // Assert
             _userRepository.Received().Delete(user);
             await _unitOfWork.Received().Commit(CancellationToken.None);
-            _mapper.Received().Map<DeleteUserResponse>(user);
+            _mapper.Received().Map<DeleteUserResponse>("user");
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace ArquiteturaDesafio.Tests.Application.Handlers
         {
             var id = Guid.NewGuid();
             // Arrange
-            var request = new DeleteUserRequest(new Core.Application.UseCases.DTOs.UserDTO() { Id = id });
+            var request = new DeleteUserRequest(id);
 
             _userRepository.Get(id, CancellationToken.None).Returns(Task.FromResult<Core.Domain.Entities.User>(null));
 

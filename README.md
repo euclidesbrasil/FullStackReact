@@ -7,18 +7,18 @@ Esta API fornece recursos para gerenciar autenticação, transações e expor os
 ## 🛠 Tecnologias Utilizadas
 
 - .NET 8
-- PostgreSQL
+- SqlServer Express
 - MongoDB
 - RabbitMQ
 
 ## 🗉 Pré-requisitos
 
-Clone este projeto usando a URL: [https://github.com/euclidesbrasil/ArquiteturaDotNet.git](https://github.com/euclidesbrasil/ArquiteturaDotNet.git)
+Clone este projeto usando a URL: [https://github.com/euclidesbrasil/FullStackReact](https://github.com/euclidesbrasil/FullStackReact)
 
 Antes de baixar o projeto, certifique-se de ter instalado:
 
 - **Visual Studio** (Versão utilizada: Microsoft Visual Studio Community 2022 - Versão 17.10.1, preferencialmente após a versão 17.8)
-- **PostgreSQL** (Versão utilizada: 17.2-3) [Baixar aqui](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
+- **SqlServer Express 2022 ** (Versão utilizada: 17.2-3) [Baixar aqui](https://www.microsoft.com/pt-br/download/details.aspx?id=104781)
 - **MongoDB Community** (Versão utilizada: 7.0.16) [Baixar aqui](https://www.mongodb.com/try/download/community-edition/releases)
 - **RabbitMQ** (Versão utilizada: 4.0.5) [Baixar aqui](https://www.rabbitmq.com/docs/install-windows)
 

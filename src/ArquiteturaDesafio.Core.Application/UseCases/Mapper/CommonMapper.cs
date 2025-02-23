@@ -12,6 +12,10 @@ using ArquiteturaDesafio.Application.UseCases.Commands.User.CreateUser;
 using ArquiteturaDesafio.Application.UseCases.Commands.User.DeleteUser;
 using Entities = ArquiteturaDesafio.Core.Domain.Entities;
 using ArquiteturaDesafio.Core.Application.UseCases.Queries.GetUsersQuery;
+using ArquiteturaDesafio.Application.UseCases.Commands.Customer.CreateCustomer;
+using ArquiteturaDesafio.Core.Application.UseCases.Queries.GetCustomerById;
+using ArquiteturaDesafio.Core.Application.UseCases.Queries.GetProductById;
+using ArquiteturaDesafio.Application.UseCases.Commands.Product.CreateProduct;
 
 namespace ArquiteturaDesafio.Core.Application.UseCases.Mapper
 {
@@ -19,6 +23,13 @@ namespace ArquiteturaDesafio.Core.Application.UseCases.Mapper
     {
         public CommonMapper()
         {
+            // Customer
+            CreateMap<CreateCustomerRequest, Customer>();
+            CreateMap<CreateCustomerRequest, Customer>();
+            CreateMap<CustomerDTO, Customer>();
+            CreateMap<Customer, CustomerDTO>();
+            CreateMap<Customer, GetCustomerByIdResponse>();
+            
             //Adress
             CreateMap<Address, AddressDto>();
             CreateMap<AddressDto, Address>();
@@ -46,7 +57,14 @@ namespace ArquiteturaDesafio.Core.Application.UseCases.Mapper
             CreateMap<User, UpdateUserResponse>();
             CreateMap<UserDTO, UpdateUserResponse>();
 
+            //Product
             
+            CreateMap<ProductBaseDTO, ProductBaseDTO> ();
+            CreateMap<CreateProductRequest, Product > ();
+            CreateMap<Product, GetProductByIdResponse>();
+            CreateMap<Product, ProductDTO>();
+            CreateMap<Product, ProductBaseDTO>();
+
         }
     }
 }

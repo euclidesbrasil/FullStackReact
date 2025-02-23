@@ -5,6 +5,7 @@ using ArquiteturaDesafio.Application.UseCases.Commands.User.CreateUser;
 using ArquiteturaDesafio.Application.UseCases.Commands.User.UpdateUser;
 using ArquiteturaDesafio.Core.Application.UseCases.Queries.GetUsersById;
 using ArquiteturaDesafio.Core.Application.UseCases.Queries.GetUsersQuery;
+using ArquiteturaDesafio.Application.UseCases.Commands.User.DeleteUser;
 
 namespace ArquiteturaDesafio.General.Api.Controllers
 {
@@ -42,6 +43,18 @@ namespace ArquiteturaDesafio.General.Api.Controllers
         {
             request.UpdateId(id);
             await _mediator.Send(request, cancellationToken);
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> Delete(Guid id,
+                                           CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new DeleteUserRequest(id), cancellationToken);
             return NoContent();
         }
 

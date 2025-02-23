@@ -5,13 +5,4 @@ using MediatR;
 
 namespace ArquiteturaDesafio.Application.UseCases.Commands.User.DeleteUser;
 
-public class DeleteUserRequest : UserDTO, IRequest<DeleteUserResponse>
-{
-    public DeleteUserRequest(UserDTO user)
-    {
-        Id = user.Id;
-        Firstname = user.Firstname;
-        Lastname = user.Lastname;
-        Email = user.Email;
-    }
-}
+public sealed record DeleteUserRequest(Guid id) : IRequest<DeleteUserResponse>;

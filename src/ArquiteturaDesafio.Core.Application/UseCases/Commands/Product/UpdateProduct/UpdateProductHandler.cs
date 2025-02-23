@@ -33,6 +33,6 @@ public class UpdateProductHandler :
         _productRepository.Update(product);
 
         await _unitOfWork.Commit(cancellationToken);
-        return _mapper.Map<UpdateProductResponse>(product);
+        return new UpdateProductResponse("Produto atualizado com sucesso");
     }
 }

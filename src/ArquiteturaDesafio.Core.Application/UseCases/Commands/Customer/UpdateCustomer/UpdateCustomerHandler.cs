@@ -30,6 +30,6 @@ public class UpdateCustomerHandler :
         var custumer = await _customerRepository.Get(request.Id, cancellationToken);
         custumer.Update(request.Name, new Core.Domain.ValueObjects.InfoContact(request.Identification.Email, request.Identification.Phone));
         await _unitOfWork.Commit(cancellationToken);
-        return _mapper.Map<UpdateCustomerResponse>(custumer);
+        return new UpdateCustomerResponse("Cliente salvo com sucesso");
     }
 }

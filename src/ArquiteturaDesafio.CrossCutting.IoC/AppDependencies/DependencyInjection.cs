@@ -23,7 +23,7 @@ namespace ArquiteturaDesafio.Infrastructure.CrossCutting.IoC
         {
             // Postgres
             services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             // MongoDB
             services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
@@ -47,6 +47,7 @@ namespace ArquiteturaDesafio.Infrastructure.CrossCutting.IoC
 
             services.AddScoped<IProducerMessage>(_ => new RabbitMQProducer(configuration.GetSection("RabbitMQSettings").Get<RabbitMQSettings>().Hostname));
 
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();

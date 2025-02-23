@@ -29,6 +29,6 @@ public class CreateProductHandler :
         _productRepository.Create(product);
 
         await _unitOfWork.Commit(cancellationToken);
-        return _mapper.Map<CreateProductResponse>(product);
+        return new CreateProductResponse(product.Id);
     }
 }

@@ -26,7 +26,7 @@ namespace ArquiteturaDesafio.General.Api.Controllers
                                                              CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(request, cancellationToken);
-            return CreatedAtAction("Create", new { id = response.Id }, response);
+            return CreatedAtAction("Create", new { id = response.id }, response);
         }
 
         [HttpPut]
@@ -46,14 +46,14 @@ namespace ArquiteturaDesafio.General.Api.Controllers
             return NoContent();
         }
 
-        [HttpGet("/customers/{id}")]
+        [HttpGet("/Customers/{id}")]
         public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(new GetCustomerByIdRequest(id), cancellationToken);
             return Ok(response);
         }
 
-        [HttpGet("/customers")]
+        [HttpGet("/Customers")]
         public async Task<ActionResult<List<GetCustomersQueryResponse>>> GetCustomersQuery(CancellationToken cancellationToken, int _page = 1, int _size = 10, [FromQuery] Dictionary<string, string> filters = null, string _order = "id asc")
         {
             filters = filters ?? new Dictionary<string, string>();

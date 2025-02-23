@@ -8,6 +8,6 @@ namespace ArquiteturaDesafio.Core.Application.UseCases.DTOs
 {
     public class ProductDTO: ProductBaseDTO
     {
-        public int Id{ get; set; }
+        public Guid Id{ get; set; }
     }
 }
