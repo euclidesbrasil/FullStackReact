@@ -1,0 +1,63 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=desafio_postgres;Port=5432;Database=desafio;Username=postgres;Password=admin
+      - MongoDbSettings__ConnectionString=mongodb://desafio_mongodb:27017
+      - MongoDbSettings__DatabaseName=desafio
+      - RabbitMQSettings__HostName=desafio_rabbitmq
+      - DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT=true
+      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+      - DOTNET_CLI_TELEMETRY_OPTOUT=1
+  
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.Worker
+    restart: always
+    environment:
+      - MongoDbSettings__ConnectionString=mongodb://desafio_mongodb:27017
+      - MongoDbSettings__DatabaseName=desafio
+      - RabbitMQSettings__HostName=desafio_rabbitmq
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: desafio_rabbitmq
+    hostname: desafio_rabbitmq
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  postgres:
+    image: "postgres:15"
+    container_name: desafio_postgres
+    hostname: desafio_postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=desafio
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  mongodb:
+    image: "mongo:6"
+    container_name: desafio_mongodb
+    hostname: desafio_mongodb
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  pg_data:
+  mongo_data:
