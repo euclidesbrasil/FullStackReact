@@ -44,7 +44,7 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.CreateSale
             try
             {
                 var sale = _mapper.Map<Entities.Order>(request);
-
+                
                 var allProducts = await _productRepository.GetAll(cancellationToken);
                 var customer = await _customerRepository.Filter(x=>x.Id == request.CustomerId, cancellationToken);
                 if (customer is null)
@@ -65,9 +65,9 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.CreateSale
                 var itens = _mapper.Map<List<Entities.OrderItem>>(request.Items);
                 sale.ClearItems();
                 sale.AddItems(itens, productsUsed);
-
+                
                 _saleRepository.Create(sale);
-
+                await _unitOfWork.Commit(cancellationToken);
                 // var createdSaleEvent = sale.GetSaleCreatedEvent();
                 // await _producerMessage.SendMessage(createdSaleEvent, "sale.created");
 

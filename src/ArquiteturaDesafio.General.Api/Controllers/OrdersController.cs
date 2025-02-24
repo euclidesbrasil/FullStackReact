@@ -28,8 +28,8 @@ public class OrdersController : ControllerBase
     public async Task<ActionResult<CreateOrderResponse>> Create(CreateOrderRequest request,
                                                          CancellationToken cancellationToken)
     {
-        var response = _mediator.Send(request, cancellationToken);
-        return CreatedAtAction("Create", new { id = response.Id }, response);
+        var response = await _mediator.Send(request, cancellationToken);
+        return CreatedAtAction("Create", new { id = response.id }, response);
     }
 
     [HttpPut]
