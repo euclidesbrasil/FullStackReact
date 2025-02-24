@@ -1,6 +1,6 @@
 ﻿using ArquiteturaDesafio.Core.Domain.Interfaces;
-using ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Context;
-using ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Repositories;
+using ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Context;
+using ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Repositories;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,9 +21,13 @@ namespace ArquiteturaDesafio.Infrastructure.CrossCutting.IoC
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            // Postgres
+            // SQL Server
+
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(
+                    configuration.GetConnectionString("DefaultConnection")),
+                    ServiceLifetime.Scoped
+                );
 
             // MongoDB
             services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
@@ -47,12 +51,15 @@ namespace ArquiteturaDesafio.Infrastructure.CrossCutting.IoC
 
             services.AddScoped<IProducerMessage>(_ => new RabbitMQProducer(configuration.GetSection("RabbitMQSettings").Get<RabbitMQSettings>().Hostname));
 
+            services.AddScoped<IOrderReadRepository, OrderReadRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddSingleton<JwtTokenService>();
+            services.AddScoped<DatabaseInitializer>();
+            
             services.AddSingleton<IJwtTokenService, JwtTokenService>();
             services.AddAutoMapper(typeof(CommonMapper));
 

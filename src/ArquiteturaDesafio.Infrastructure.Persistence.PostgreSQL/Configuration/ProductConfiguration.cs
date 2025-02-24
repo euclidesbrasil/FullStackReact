@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ArquiteturaDesafio.Core.Domain.Entities;
 
-namespace CleanArch.Infrastructure.PostgreSQL.Configuration
+namespace CleanArch.Infrastructure.SQLServer.Configuration
 {
     public class ProductConfiguration : IEntityTypeConfiguration<Product>
     {

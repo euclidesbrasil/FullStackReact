@@ -1,13 +1,13 @@
 ﻿using ArquiteturaDesafio.Core.Domain.Common;
 using ArquiteturaDesafio.Core.Domain.Entities;
 using ArquiteturaDesafio.Core.Domain.Interfaces;
-using ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Context;
-using ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Extensions;
+using ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Context;
+using ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 
-namespace ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Repositories;
+namespace ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Repositories;
 
 public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
 {
@@ -22,6 +22,14 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
         entity.DateCreated = DateTime.UtcNow;
         Context.Add(entity);
+    }
+
+    public async Task CreateAsync(T entity)
+    {
+        entity.DateCreated = DateTime.UtcNow;
+        await Context.AddAsync(entity);
+        await Context.SaveChangesAsync();
+
     }
 
     public void Update(T entity)

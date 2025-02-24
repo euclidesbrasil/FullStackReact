@@ -1,96 +1,95 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using FluentValidation;
-namespace ArquiteturaDesafio.General.Api.Filters;
+using System.Text.Json;
 
-public class CustomExceptionFilter : IExceptionFilter
+namespace ArquiteturaDesafio.General.Api.Filters
 {
-    public void OnException(ExceptionContext context)
+    public class ExceptionHandlingMiddleware
     {
-        var exception = context.Exception;
+        private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+        private readonly bool _enableDetailedLogging;
 
-        switch (exception)
+        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger, bool enableDetailedLogging)
         {
-            // Erros de validação (400 Bad Request)
-            case ValidationException validationException:
-                var errors = validationException.Errors
-                    .Select(error => $"{error.PropertyName}: {error.ErrorMessage}")
-                    .ToList();
-
-                context.Result = new BadRequestObjectResult(new
-                {
-                    Title = "Validation erros.",
-                    Status = (int)HttpStatusCode.BadRequest,
-                    Errors = errors
-                });
-                context.ExceptionHandled = true;
-                break;
-
-            // Recurso não encontrado (404 Not Found)
-            case KeyNotFoundException _:
-            case ArgumentNullException _:
-                context.Result = new NotFoundObjectResult(new
-                {
-                    Title = "Resource not found.",
-                    Status = (int)HttpStatusCode.NotFound,
-                    Detail = exception.Message
-                });
-                context.ExceptionHandled = true;
-                break;
-
-            // Erros de solicitação inválida (400 Bad Request)
-            case ArgumentException _:
-            case InvalidOperationException _:
-                context.Result = new BadRequestObjectResult(new
-                {
-                    Title = "Invalid request.",
-                    Status = (int)HttpStatusCode.BadRequest,
-                    Detail = exception.Message
-                });
-                context.ExceptionHandled = true;
-                break;
-
-            // Erros de autenticação/autorização (401 Unauthorized ou 403 Forbidden)
-            case UnauthorizedAccessException _:
-                context.Result = new ObjectResult(new
-                {
-                    Title = "Unauthorized.",
-                    Status = (int)HttpStatusCode.Unauthorized,
-                    Detail = exception.Message
-                })
-                {
-                    StatusCode = (int)HttpStatusCode.Unauthorized
-                };
-                context.ExceptionHandled = true;
-                break;
-
-            // Erros internos do servidor (500 Internal Server Error)
-            default:
-                context.Result = new ObjectResult(new
-                {
-                    Title = "Internal server error.",
-                    Status = (int)HttpStatusCode.InternalServerError,
-                    Detail = "Ocorreu um erro inesperado. Tente novamente mais tarde."
-                })
-                {
-                    StatusCode = (int)HttpStatusCode.InternalServerError
-                };
-                context.ExceptionHandled = true;
-                break;
+            _next = next ?? throw new ArgumentNullException(nameof(next));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _enableDetailedLogging = enableDetailedLogging;
         }
 
-        // Log da exceção (opcional, dependendo do seu sistema de logs)
-        LogException(exception);
+        public async Task InvokeAsync(HttpContext context)
+        {
+            try
+            {
+                await _next(context);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogError(ex, "A key was not found.");
+                await HandleExceptionAsync(context, ex);
+            }catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogError(ex, "Unauthorized access.");
+                await HandleExceptionAsync(context, ex);
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogError(ex, "Validation failed.");
+                await HandleExceptionAsync(context, ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An exception occurred while processing the request.");
+                await HandleExceptionAsync(context, ex);
+            }
+        }
+
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        {
+            var response = context.Response;
+            response.ContentType = "application/json";
+
+            var statusCode = GetStatusCodeForException(exception);
+            response.StatusCode = (int)statusCode;
+
+            var errorResponse = new ErrorResponse
+            {
+                StatusCode = (int)statusCode,
+                Message = exception.Message,
+                // StackTrace só será incluído se o registro detalhado estiver ativado
+                Detailed = _enableDetailedLogging ? exception.StackTrace : null
+            };
+
+            var payload = JsonSerializer.Serialize(errorResponse);
+
+            await response.WriteAsync(payload);
+        }
+
+        private static HttpStatusCode GetStatusCodeForException(Exception exception)
+        {
+            return exception switch
+            {
+                ArgumentNullException => HttpStatusCode.BadRequest,
+                ArgumentException => HttpStatusCode.BadRequest,
+                KeyNotFoundException => HttpStatusCode.NotFound,
+                UnauthorizedAccessException => HttpStatusCode.Unauthorized,
+                ValidationException => HttpStatusCode.UnprocessableEntity,
+                _ => HttpStatusCode.InternalServerError
+            };
+        }
     }
 
-    private void LogException(Exception exception)
+    // Classe auxiliar para resposta estruturada a erros
+    public class ErrorResponse
     {
-        // Implemente o registro de logs aqui (ex.: usando ILogger, Serilog, etc.)
-        Console.WriteLine($"Erro: {exception.Message}");
-        Console.WriteLine($"StackTrace: {exception.StackTrace}");
+        public int StatusCode { get; set; }
+        public string Message { get; set; }
+        public string Detailed { get; set; } // Anulável para evitar a exposição do rastreamento de pilha na produção
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ArquiteturaDesafio.Core.Application.UseCases.DTOs
 {
-    public class SaleItemDTO: SaleItemBaseDTO
+    public class SaleItemDTO: OrderItemBaseDTO
     {
         public int Id { get; set; } // Identificador único do item
         public int SaleId { get; set; } // Relacionamento com a venda (FK)

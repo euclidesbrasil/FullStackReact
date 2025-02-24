@@ -1,4 +1,4 @@
-﻿using ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Context;
+﻿using ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;

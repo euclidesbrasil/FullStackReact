@@ -1,7 +1,7 @@
 ﻿using ArquiteturaDesafio.Core.Domain.Interfaces;
-using ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Context;
+using ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Context;
 
-namespace ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Repositories;
+namespace ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Repositories;
 
 public class UnitOfWork : IUnitOfWork
 {

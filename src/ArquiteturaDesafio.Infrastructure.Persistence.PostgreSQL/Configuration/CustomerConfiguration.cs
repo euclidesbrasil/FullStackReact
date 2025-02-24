@@ -3,7 +3,7 @@ using ArquiteturaDesafio.Core.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Configuration
+namespace ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Configuration
 {
     public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {

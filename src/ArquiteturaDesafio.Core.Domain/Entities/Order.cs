@@ -60,6 +60,7 @@ namespace ArquiteturaDesafio.Core.Domain.Entities
 
         public void AddItems(IEnumerable<OrderItem> items, IEnumerable<Product> productsUsed)
         {
+            Items = Items ?? new List<OrderItem>();
             foreach (var item in items)
             {
                 var product = productsUsed.FirstOrDefault(p => p.Id == item.ProductId);

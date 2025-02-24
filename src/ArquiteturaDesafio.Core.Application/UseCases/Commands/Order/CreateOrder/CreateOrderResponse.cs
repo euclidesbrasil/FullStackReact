@@ -1,4 +1,5 @@
-﻿using Ambev.Core.Application.UseCases.DTOs;
+﻿using ArquiteturaDesafio.Application.UseCases.Commands.Customer.DeleteCustomer;
+using ArquiteturaDesafio.Core.Application.UseCases.DTOs;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,5 @@ using System.Threading.Tasks;
 
 namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.CreateSale
 {
-    public class CreateSaleRequest:SaleBaseDTO, IRequest<CreateSaleResponse>
-    {
-    }
+    public sealed record CreateOrderResponse(Guid id);
 }

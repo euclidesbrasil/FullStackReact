@@ -5,6 +5,7 @@ using ArquiteturaDesafio.Application.UseCases.Commands.Order.CreateSale;
 using ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale;
 using ArquiteturaDesafio.Core.Application.UseCases.Queries.GetOrdersQuery;
 using ArquiteturaDesafio.Application.UseCases.Queries.GetOrderById;
+using ArquiteturaDesafio.Application.UseCases.Commands.Order.DeleteOrder;
 namespace ArquiteturaDesafio.General.Api.Controllers;
 
 [Route("[controller]")]
@@ -24,11 +25,11 @@ public class OrdersController : ControllerBase
     [ProducesResponseType(400)] // Erro de validação
     [ProducesResponseType(401)] // Autenticação
     [ProducesResponseType(500)] // Erro interno
-    public async Task<ActionResult<CreateSaleResponse>> Create(CreateSaleRequest request,
+    public async Task<ActionResult<CreateOrderResponse>> Create(CreateOrderRequest request,
                                                          CancellationToken cancellationToken)
     {
-        _mediator.Send(request, cancellationToken);
-        return NoContent();
+        var response = _mediator.Send(request, cancellationToken);
+        return CreatedAtAction("Create", new { id = response.Id }, response);
     }
 
     [HttpPut]
@@ -44,7 +45,20 @@ public class OrdersController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("/sales/{id}")]
+    [HttpDelete]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> Delete(Guid id,
+                                            CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new DeleteOrderRequest(id), cancellationToken);
+        return NoContent();
+    }
+
+
+    [HttpGet("/Orders/{id}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
@@ -55,7 +69,7 @@ public class OrdersController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("/sales")]
+    [HttpGet("/Orders")]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]

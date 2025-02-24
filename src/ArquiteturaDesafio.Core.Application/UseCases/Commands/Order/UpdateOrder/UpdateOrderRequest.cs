@@ -20,7 +20,7 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale
         }
     }
 
-    public class UpdateSaleItemRequest : SaleItemBaseDTO
+    public class UpdateSaleItemRequest : OrderItemBaseDTO
     {
         public Guid Id { get; set; } // Identificador único do item
         public Guid OrderId { get; internal set; } // Relacionamento com a venda (FK)

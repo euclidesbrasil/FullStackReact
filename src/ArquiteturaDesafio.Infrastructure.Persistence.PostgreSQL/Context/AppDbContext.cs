@@ -1,22 +1,21 @@
 ﻿using ArquiteturaDesafio.Core.Domain.Entities;
-using ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Configuration;
-using CleanArch.Infrastructure.PostgreSQL.Configuration;
+using ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Configuration;
+using CleanArch.Infrastructure.SQLServer.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Context;
-
+namespace ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Context;
 
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
-    public DbSet<User> Users { get; set; }
-    public DbSet<Order> Orders { get; set; }
-    public DbSet<OrderItem> OrderItems { get; set; }
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Customer> Customers { get; set; }
+    public DbSet<User> Users { get; set; } = default!;
+    public DbSet<Order> Orders { get; set; } = default!;
+    public DbSet<OrderItem> OrderItems { get; set; } = default!;
+    public DbSet<Product> Products { get; set; } = default!;
+    public DbSet<Customer> Customers { get; set; } = default!;
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserConfiguration());

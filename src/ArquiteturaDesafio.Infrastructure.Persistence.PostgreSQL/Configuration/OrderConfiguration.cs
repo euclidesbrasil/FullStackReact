@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Configuration
+namespace ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Configuration
 {
     public class OrderConfiguration : IEntityTypeConfiguration<Order>
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
-            builder.ToTable("Sales"); // Define o nome da tabela
+            builder.ToTable("Orders"); // Define o nome da tabela
 
             builder.HasKey(s => s.Id); // Define a chave primária
 

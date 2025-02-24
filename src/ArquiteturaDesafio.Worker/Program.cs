@@ -31,7 +31,7 @@ builder.Services.AddSingleton<IMongoDatabase>(serviceProvider =>
     return client.GetDatabase(configMongo.DatabaseName);
 });
 
-// builder.Services.AddSingleton<I...Repository, ...Repository>();
+builder.Services.AddSingleton<IOrderReadRepository, OrderReadRepository>();
 
 var host = builder.Build();
 host.Run();

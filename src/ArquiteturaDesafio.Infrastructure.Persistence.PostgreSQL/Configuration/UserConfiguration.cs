@@ -5,7 +5,7 @@ using ArquiteturaDesafio.Core.Domain.ValueObjects;
 using System.Net;
 using System.Reflection.Emit;
 
-namespace ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Configuration
+namespace ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Configuration
 {
     public class UserConfiguration : IEntityTypeConfiguration<User>
     {

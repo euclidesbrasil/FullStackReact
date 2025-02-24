@@ -5,7 +5,7 @@ using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Extensions
+namespace ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Extensions
 {
     public static class QueryableExtensions
     {

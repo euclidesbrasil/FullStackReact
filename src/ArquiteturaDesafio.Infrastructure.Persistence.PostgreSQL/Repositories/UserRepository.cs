@@ -1,9 +1,9 @@
 ﻿using ArquiteturaDesafio.Core.Domain.Common;
 using ArquiteturaDesafio.Core.Domain.Entities;
 using ArquiteturaDesafio.Core.Domain.Interfaces;
-using ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Context;
-using ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Extensions;
-using ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Repositories;
+using ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Context;
+using ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Extensions;
+using ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Repositories
+namespace ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {

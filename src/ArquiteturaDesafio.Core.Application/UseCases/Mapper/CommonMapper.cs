@@ -16,6 +16,8 @@ using ArquiteturaDesafio.Application.UseCases.Commands.Customer.CreateCustomer;
 using ArquiteturaDesafio.Core.Application.UseCases.Queries.GetCustomerById;
 using ArquiteturaDesafio.Core.Application.UseCases.Queries.GetProductById;
 using ArquiteturaDesafio.Application.UseCases.Commands.Product.CreateProduct;
+using ArquiteturaDesafio.Application.UseCases.Commands.Order.CreateSale;
+using Ambev.Core.Application.UseCases.DTOs;
 
 namespace ArquiteturaDesafio.Core.Application.UseCases.Mapper
 {
@@ -64,6 +66,13 @@ namespace ArquiteturaDesafio.Core.Application.UseCases.Mapper
             CreateMap<Product, GetProductByIdResponse>();
             CreateMap<Product, ProductDTO>();
             CreateMap<Product, ProductBaseDTO>();
+
+            // Order
+            CreateMap<CreateOrderRequest, Order>();
+            CreateMap<OrderBaseDTO, Order>();
+            CreateMap<OrderItemBaseDTO, OrderItem>();
+            
+
 
         }
     }

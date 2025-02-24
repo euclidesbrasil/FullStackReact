@@ -2,9 +2,9 @@
 
 namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.CreateSale;
 
-public sealed class CreateSaleValidator : AbstractValidator<CreateSaleRequest>
+public sealed class CreateOrderValidator : AbstractValidator<CreateOrderRequest>
 {
-    public CreateSaleValidator()
+    public CreateOrderValidator()
     {
 
         RuleFor(s => s.OrderDate)

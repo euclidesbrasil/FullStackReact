@@ -1,5 +1,5 @@
 ﻿using Entities = ArquiteturaDesafio.Core.Domain.Entities;
-using ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Context;
+using ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ArquiteturaDesafio.Core.Domain.Interfaces;
 
-namespace ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Seed
+namespace ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Seed
 {
     public static class SeedData
     {

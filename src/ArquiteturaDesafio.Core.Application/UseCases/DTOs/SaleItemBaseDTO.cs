@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ArquiteturaDesafio.Core.Application.UseCases.DTOs
 {
-    public class SaleItemBaseDTO
+    public class OrderItemBaseDTO
     {
-        public SaleItemBaseDTO()
+        public OrderItemBaseDTO()
         {
         }
         public Guid ProductId { get; set; } // Identidade Externa do Produto

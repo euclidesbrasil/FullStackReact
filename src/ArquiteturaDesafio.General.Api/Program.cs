@@ -7,9 +7,9 @@ using ArquiteturaDesafio.General.Api.Filters;
 using Microsoft.OpenApi.Models;
 using ArquiteturaDesafio.Infrastructure.Persistence.MongoDB.Configuration;
 using MongoDB.Driver;
-using ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Context;
+using ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Context;
 using Microsoft.EntityFrameworkCore;
-using ArquiteturaDesafio.Infrastructure.Persistence.PostgreSQL.Seed;
+using ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Seed;
 using ArquiteturaDesafio.Core.Domain.Interfaces;
 
 public class Program
@@ -32,7 +32,7 @@ public class Program
                 Scheme = "Bearer",
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Description = "Enter 'Bearer' [space] and then your token in the text input below. Example: \"Bearer 12345abcdef\""
+                Description = "Informe o tokenr token in the text input below. Example: \"12345abcdef\""
             });
 
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -71,14 +71,12 @@ public class Program
                 };
             });
 
-        // Registra o filtro de exceção personalizado
-        builder.Services.AddMvc(options =>
-        {
-            options.Filters.Add(new CustomExceptionFilter());
-        });
 
+        builder.Logging.AddFile("Logs/app_log.txt"); // Log em arquivo
         var app = builder.Build();
 
+        // Registra o filtro de exceção personalizado
+        app.UseMiddleware<ExceptionHandlingMiddleware>(app.Environment.IsDevelopment());
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {

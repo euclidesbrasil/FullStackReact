@@ -1,4 +1,4 @@
-﻿using ArquiteturaDesafio.Core.Application.UseCases.DTOs;
+﻿using Ambev.Core.Application.UseCases.DTOs;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.CreateSale
 {
-    public class CreateSaleResponse: SaleWithDetaislsDTO
+    public class CreateOrderRequest:OrderBaseDTO, IRequest<CreateOrderResponse>
     {
     }
 }
