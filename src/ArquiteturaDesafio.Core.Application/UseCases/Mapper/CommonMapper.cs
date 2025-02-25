@@ -17,7 +17,6 @@ using ArquiteturaDesafio.Core.Application.UseCases.Queries.GetCustomerById;
 using ArquiteturaDesafio.Core.Application.UseCases.Queries.GetProductById;
 using ArquiteturaDesafio.Application.UseCases.Commands.Product.CreateProduct;
 using ArquiteturaDesafio.Application.UseCases.Commands.Order.CreateSale;
-using Ambev.Core.Application.UseCases.DTOs;
 using ArquiteturaDesafio.Application.UseCases.Queries.GetOrderById;
 using ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale;
 

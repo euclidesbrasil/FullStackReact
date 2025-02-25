@@ -23,7 +23,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "General Api - Controle de AUTH, DEBIT, CREDIT, REPORTS com o banco POSTGREE e MONGODB", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "General Api - Controle de Pedidos com o banco SQLSEVER e MONGODB", Version = "v1" });
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -32,7 +32,7 @@ public class Program
                 Scheme = "Bearer",
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Description = "Informe o tokenr token in the text input below. Example: \"12345abcdef\""
+                Description = "Informe o token. Examplo: \"12345abcdef\""
             });
 
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -50,6 +50,15 @@ public class Program
                 }
             });
         });
+
+        var urlsAccess = builder.Configuration.GetSection("UrlAccess:Values").Get<string[]>();
+        builder.Services.AddCors(o => o.AddPolicy("CORSPolicy", builder =>
+        {
+            builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+        }));
 
         // Registro dos serviços
         builder.Services.AddInfrastructure(builder.Configuration);
@@ -88,6 +97,8 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+
+        app.UseCors("CORSPolicy");
 
         // Instanciar banco MongoDB
         using (var scope = app.Services.CreateScope())

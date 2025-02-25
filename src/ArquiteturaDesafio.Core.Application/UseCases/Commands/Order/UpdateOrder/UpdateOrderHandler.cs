@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ArquiteturaDesafio.Core.Domain.Entities;
 using ArquiteturaDesafio.Core.Domain.ValueObjects;
+using AutoMapper.Internal;
 
 namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale
 {
@@ -43,7 +44,6 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale
             var allRequestItensIds = request.Items.Select(x => x.Id).ToList();
             var sale = await _saleRepository.GetSaleWithItemsAsync(request.Id, cancellationToken);
             var customer = await _customerRepository.Get(request.CustomerId, cancellationToken);
-            var saleToUpdate = _mapper.Map<Entities.Order>(request);
 
             sale.VerifyIfAllItensAreMine(allRequestItensIds);
 
@@ -53,7 +53,7 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale
             }
           
 
-            sale.Update(saleToUpdate, customer);
+            sale.Update(request.OrderDate, customer, request.Status);
 
             List<Guid> idsProducts = request.Items.Select(i => i.ProductId).ToList();
             var productsUsed = await _productRepository.Filter(x => idsProducts.Contains(x.Id), cancellationToken);
@@ -61,7 +61,9 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale
             List<Entities.OrderItem> itens = request.Items.Select(x=> new OrderItem(request.Id,x.ProductId,"",x.Quantity,0,x.Id)).ToList();
             var newItems = itens.Where(x => x.Id == Guid.Empty).ToList();
             var editItems = itens.Where(x => x.Id != Guid.Empty).ToList();
-
+            var removeItems = sale.Items.Where(x => !allRequestItensIds.Contains(x.Id)).ToList();
+            
+            sale.RemoveItems(removeItems.Select(ids=> ids.Id).ToList());
             sale.AddItems(newItems, productsUsed);
             sale.UpdateItems(editItems, productsUsed);
 
@@ -73,7 +75,7 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale
                     new CustomerOrder(customer.Id, customer.Name, customer.Identification.Email, customer.Identification.Phone),
                     sale.OrderDate,
                     sale.TotalAmount,
-                    sale.Status.ToString(), sale.Items.Select(i => new OrderItemRead(i.ProductId.ToString(), i.Name, i.Quantity, i.UnitPrice, i.TotalPrice)).ToList()
+                    sale.Status.ToString(), sale.Items.Select(i => new OrderItemRead(i.ProductId.ToString(), i.Name, i.Quantity, i.UnitPrice, i.TotalPrice,i.Id)).ToList()
                     );
 
 

@@ -1,5 +1,4 @@
-﻿using Ambev.Core.Application.UseCases.DTOs;
-using ArquiteturaDesafio.Core.Application.UseCases.DTOs;
+﻿using ArquiteturaDesafio.Core.Application.UseCases.DTOs;
 using ArquiteturaDesafio.Core.Domain.Enum;
 using MediatR;
 using System;

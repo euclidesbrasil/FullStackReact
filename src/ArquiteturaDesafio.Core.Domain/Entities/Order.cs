@@ -26,15 +26,28 @@ namespace ArquiteturaDesafio.Core.Domain.Entities
             private set { /* Necessário para o Entity Framework */ }
         }
 
-        public void Update(Order request, Customer customer)
+        public void Update(DateTime orderDate, Customer customer)
         {
-            OrderDate = request.OrderDate;
+            OrderDate = orderDate;
             CustomerId = customer.Id;
         }
-       
+
+        public void Update(DateTime orderDate, Customer customer, OrderStatus status)
+        {
+            OrderDate = orderDate;
+            CustomerId = customer.Id;
+            Status = status;
+        }
+
         public void ClearItems()
         {
             Items = new List<OrderItem>();
+        }
+
+        public void RemoveItems(List<Guid> idsToRemove)
+        {
+            Items = Items ?? new List<OrderItem>();
+            Items = Items.Where(x => !idsToRemove.Contains(x.Id)).ToList();
         }
 
         public void UpdateItems(IEnumerable<OrderItem> items, IEnumerable<Product> productsUsed)
@@ -81,8 +94,9 @@ namespace ArquiteturaDesafio.Core.Domain.Entities
         public void VerifyIfAllItensAreMine(List<Guid> idsItensToVerify)
         {
             idsItensToVerify = idsItensToVerify ?? new List<Guid>();
-            
-            var itensNotMine = Items.Where(x => !idsItensToVerify.Contains(x.Id)).ToList();
+            idsItensToVerify = idsItensToVerify.Where(x => x != Guid.Empty).ToList();// Somente os com ID associado
+            var itensFromAtualOrder = Items.Select(x => x.Id).ToList();
+            var itensNotMine = idsItensToVerify.Where(x => !itensFromAtualOrder.Contains(x)).ToList();
 
             if(itensNotMine.Any())
             {

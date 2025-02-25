@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ambev.Core.Application.UseCases.DTOs
+namespace ArquiteturaDesafio.Core.Application.UseCases.DTOs
 {
     public class OrderBaseDTO
     {
