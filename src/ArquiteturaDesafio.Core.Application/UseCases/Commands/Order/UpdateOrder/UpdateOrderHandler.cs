@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArquiteturaDesafio.Core.Domain.Entities;
+using ArquiteturaDesafio.Core.Domain.ValueObjects;
 
 namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale
 {
@@ -56,7 +58,7 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale
             List<Guid> idsProducts = request.Items.Select(i => i.ProductId).ToList();
             var productsUsed = await _productRepository.Filter(x => idsProducts.Contains(x.Id), cancellationToken);
 
-            List<Entities.OrderItem> itens =  _mapper.Map<List<Entities.OrderItem>>(request.Items);
+            List<Entities.OrderItem> itens = request.Items.Select(x=> new OrderItem(request.Id,x.ProductId,"",x.Quantity,0,x.Id)).ToList();
             var newItems = itens.Where(x => x.Id == Guid.Empty).ToList();
             var editItems = itens.Where(x => x.Id != Guid.Empty).ToList();
 
@@ -65,11 +67,18 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale
 
             _saleRepository.Update(sale);
             await _unitOfWork.Commit(cancellationToken);
-            
-            // var modifiedSaleEvent = sale.GetSaleModifiedEvent();
-            // await _producerMessage.SendMessage(modifiedSaleEvent, "sale.modified");
 
-            return _mapper.Map<UpdateOrderResponse>(sale);
+            OrderRead orderEvent = new OrderRead(
+                    sale.Id,
+                    new CustomerOrder(customer.Id, customer.Name, customer.Identification.Email, customer.Identification.Phone),
+                    sale.OrderDate,
+                    sale.TotalAmount,
+                    sale.Status.ToString(), sale.Items.Select(i => new OrderItemRead(i.ProductId.ToString(), i.Name, i.Quantity, i.UnitPrice, i.TotalPrice)).ToList()
+                    );
+
+
+            await _producerMessage.SendMessage(orderEvent, "order.updated");
+            return new UpdateOrderResponse("Order atualizada com sucesso.");
         }
     }
 }

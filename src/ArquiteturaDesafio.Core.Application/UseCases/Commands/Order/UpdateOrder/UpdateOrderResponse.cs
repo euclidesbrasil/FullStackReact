@@ -8,7 +8,5 @@ using System.Threading.Tasks;
 
 namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale
 {
-    public class UpdateOrderResponse: SaleWithDetaislsDTO
-    {
-    }
+    public sealed record UpdateOrderResponse(string message);
 }

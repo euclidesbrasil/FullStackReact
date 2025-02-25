@@ -22,10 +22,81 @@ namespace ArquiteturaDesafio.Worker
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _consumer.ConsumeQueue("order.created", ProcessMessage, stoppingToken);
+            var consumeCreatedTask = _consumer.ConsumeQueue("order.created", ProcessMessageCreated, stoppingToken);
+            var consumeUpdatedTask = _consumer.ConsumeQueue("order.updated", ProcessMessageUpdated, stoppingToken);
+            var consumeDeletedTask = _consumer.ConsumeQueue("order.deleted", ProcessMessageDeleted, stoppingToken);
+
+            await Task.WhenAll(consumeCreatedTask, consumeUpdatedTask, consumeDeletedTask);
         }
 
-        private async Task ProcessMessage(string message)
+        private async Task ProcessMessageDeleted(string message)
+        {
+            try
+            {
+                if (message is null)
+                {
+                    return;
+                }
+
+                // Parse da mensagem para um JObject
+                JObject jsonObject = JObject.Parse(message);
+
+                // Extrair a parte "Data" do JSON e converter para a classe TransactionXYZ
+                OrderRead _transaction = jsonObject.ToObject<OrderRead>();
+
+                // Recupera o saldo diário da data da transação
+                var filterOrders = await _repository.Filter(x => x.OrderId == _transaction.OrderId, CancellationToken.None);
+
+                // Verifica se é um novo realmente
+                var isOld = filterOrders.Count == 1;
+
+                // Se existe, remover
+                if (isOld)
+                {
+                    var _transactionEdit = filterOrders.FirstOrDefault();
+                    await _repository.Delete(_transactionEdit);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao salvar o order read.");
+            }
+        }
+        private async Task ProcessMessageUpdated(string message)
+        {
+            try
+            {
+                if (message is null)
+                {
+                    return;
+                }
+
+                // Parse da mensagem para um JObject
+                JObject jsonObject = JObject.Parse(message);
+
+                // Extrair a parte "Data" do JSON e converter para a classe TransactionXYZ
+                OrderRead _transaction = jsonObject.ToObject<OrderRead>();
+
+                // Recupera o saldo diário da data da transação
+                var filterOrders = await _repository.Filter(x => x.OrderId == _transaction.OrderId, CancellationToken.None);
+
+                // Verifica se é um novo realmente
+                var isOld = filterOrders.Count == 1;
+
+                // Se novo inclui
+                if (isOld)
+                {
+                    var _transactionEdit = filterOrders.FirstOrDefault();
+                    _transactionEdit.Update(_transaction.Customer, _transaction.OrderDate, _transaction.TotalAmount, _transaction.Status, _transaction.Items);
+                    await _repository.Update(_transactionEdit);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao salvar o order read.");
+            }
+        }
+        private async Task ProcessMessageCreated(string message)
         {
             try
             {

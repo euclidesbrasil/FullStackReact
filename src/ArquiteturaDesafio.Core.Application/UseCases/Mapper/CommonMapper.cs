@@ -18,6 +18,8 @@ using ArquiteturaDesafio.Core.Application.UseCases.Queries.GetProductById;
 using ArquiteturaDesafio.Application.UseCases.Commands.Product.CreateProduct;
 using ArquiteturaDesafio.Application.UseCases.Commands.Order.CreateSale;
 using Ambev.Core.Application.UseCases.DTOs;
+using ArquiteturaDesafio.Application.UseCases.Queries.GetOrderById;
+using ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale;
 
 namespace ArquiteturaDesafio.Core.Application.UseCases.Mapper
 {
@@ -71,8 +73,13 @@ namespace ArquiteturaDesafio.Core.Application.UseCases.Mapper
             CreateMap<CreateOrderRequest, Order>();
             CreateMap<OrderBaseDTO, Order>();
             CreateMap<OrderItemBaseDTO, OrderItem>();
+            CreateMap<OrderRead, SaleWithDetaislsDTO>();
+            CreateMap<OrderRead, GetOrderByIdResponse>();
+            CreateMap<OrderRead, OrderReadDTO>();
+            CreateMap<OrderItemRead, OrderItemReadDTO>();
+            CreateMap<CustomerOrder, CustomerOrderDTO>();
+            CreateMap<UpdateSaleItemRequest, OrderItem>();
             
-
 
         }
     }

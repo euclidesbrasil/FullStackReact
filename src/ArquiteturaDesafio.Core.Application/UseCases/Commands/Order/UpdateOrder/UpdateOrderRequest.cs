@@ -1,5 +1,6 @@
 ﻿using Ambev.Core.Application.UseCases.DTOs;
 using ArquiteturaDesafio.Core.Application.UseCases.DTOs;
+using ArquiteturaDesafio.Core.Domain.Enum;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -14,18 +15,18 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.UpdateSale
         public Guid Id { get;  internal set; }
         public List<UpdateSaleItemRequest> Items { get; set; }
         public Guid CustomerId { get; set; }
+        public OrderStatus Status { get; set; }
         public void SetId(Guid id)
         {
             Id = id;
         }
     }
 
-    public class UpdateSaleItemRequest : OrderItemBaseDTO
+    public class UpdateSaleItemRequest 
     {
         public Guid Id { get; set; } // Identificador único do item
-        public Guid OrderId { get; internal set; } // Relacionamento com a venda (FK)
-        public Guid ProductId { get; internal set; } // Relacionamento com a venda (FK)
-        public bool IsCancelled { get; set; } // Override para cancelamento do item
+        public Guid ProductId { get; set; } // Relacionamento com a venda (FK)
+        public int Quantity { get; set; } // Override para cancelamento do item
 
     }
 }

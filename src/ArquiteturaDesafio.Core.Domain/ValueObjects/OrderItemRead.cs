@@ -10,6 +10,10 @@ namespace ArquiteturaDesafio.Core.Domain.ValueObjects
 {
     public class OrderItemRead : ValueObject
     {
+        public OrderItemRead()
+        {
+        }
+
         public OrderItemRead(string productId, string productName, int quantity, decimal unitPrice, decimal totalPrice)
         {
             ProductId = productId;
@@ -19,6 +23,17 @@ namespace ArquiteturaDesafio.Core.Domain.ValueObjects
             TotalPrice = totalPrice;
         }
 
+        public OrderItemRead(string productId, string productName, int quantity, decimal unitPrice, decimal totalPrice, Guid id)
+        {
+            ProductId = productId;
+            ProductName = productName;
+            Quantity = quantity;
+            UnitPrice = unitPrice;
+            TotalPrice = totalPrice;
+            Id = id.ToString();
+        }
+
+        public string Id { get; set; }
         public string ProductId { get; set; }
         public string ProductName { get; set; }
         public int Quantity { get; set; }

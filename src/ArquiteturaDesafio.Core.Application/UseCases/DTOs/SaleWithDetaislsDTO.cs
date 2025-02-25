@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace ArquiteturaDesafio.Core.Application.UseCases.DTOs
 {
-    public class SaleWithDetaislsDTO : SaleDTO
+    public class SaleWithDetaislsDTO : OrderReadDTO
     {
-        public string CustomerName { get; set; } // Nome do Cliente (desnormalizado)
-        public decimal TotalAmount { get; set; }
+        
     }
 }

@@ -19,6 +19,8 @@ public class OrderReadRepository : BaseRepositoryNoRelational<OrderRead>, IOrder
         await base.Create(entity);
     }
 
+
+
     public async Task<PaginatedResult<OrderRead>> GetPaginatedResultAsync(
     Expression<Func<OrderRead, bool>> filter,
     PaginationQuery paginationQuery,

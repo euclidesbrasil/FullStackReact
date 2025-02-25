@@ -13,10 +13,10 @@ namespace ArquiteturaDesafio.Core.Application.UseCases.Queries.GetOrdersQuery
 {
     public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQueryRequest, GetOrdersQueryResponse>
     {
-        private readonly IOrderRepository _saleRepository;
+        private readonly IOrderReadRepository _saleRepository;
         private readonly IMapper _mapper;
 
-        public GetOrdersQueryHandler(IOrderRepository saleRepository, IMapper mapper)
+        public GetOrdersQueryHandler(IOrderReadRepository saleRepository, IMapper mapper)
         {
             _saleRepository = saleRepository;
             _mapper = mapper;
@@ -24,7 +24,7 @@ namespace ArquiteturaDesafio.Core.Application.UseCases.Queries.GetOrdersQuery
 
         public async Task<GetOrdersQueryResponse> Handle(GetOrdersQueryRequest request, CancellationToken cancellationToken)
         {
-            var sales = await _saleRepository.GetSalesPagination(new Domain.Common.PaginationQuery()
+            var sales = await _saleRepository.GetPaginatedResultAsync(x => true, new Domain.Common.PaginationQuery()
             {
                 Order = request.order,
                 Page = request.page,
@@ -33,7 +33,7 @@ namespace ArquiteturaDesafio.Core.Application.UseCases.Queries.GetOrdersQuery
             }, cancellationToken);
 
             List<SaleWithDetaislsDTO> itensReturn = new List<SaleWithDetaislsDTO>();
-            foreach(var item in sales.Data)
+            foreach (var item in sales.Data)
             {
                 itensReturn.Add(_mapper.Map<SaleWithDetaislsDTO>(item));
             }

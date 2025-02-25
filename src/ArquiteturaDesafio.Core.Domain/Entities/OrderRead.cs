@@ -11,9 +11,27 @@ namespace ArquiteturaDesafio.Core.Domain.Entities
 {
     public class OrderRead : BaseEntityNoRelational
     {
+        public OrderRead()
+        {
+        }
+
+        public OrderRead(Guid id)
+        {
+            OrderId = id.ToString();
+        }
+
         public OrderRead(Guid orderId, CustomerOrder customer, DateTime orderDate, decimal totalAmount, string status, List<OrderItemRead> items)
         {
             OrderId = orderId.ToString();
+            Customer = customer;
+            OrderDate = orderDate;
+            TotalAmount = totalAmount;
+            Status = status;
+            Items = items;
+        }
+
+        public void Update(CustomerOrder customer, DateTime orderDate, decimal totalAmount, string status, List<OrderItemRead> items)
+        {
             Customer = customer;
             OrderDate = orderDate;
             TotalAmount = totalAmount;

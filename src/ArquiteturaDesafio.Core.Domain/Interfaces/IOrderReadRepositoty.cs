@@ -6,5 +6,8 @@ namespace ArquiteturaDesafio.Core.Domain.Interfaces;
 
 public interface IOrderReadRepository: IBaseRepositoryNoRelational<OrderRead>
 {
-    
+    Task<PaginatedResult<OrderRead>> GetPaginatedResultAsync(
+    Expression<Func<OrderRead, bool>> filter,
+    PaginationQuery paginationQuery,
+    CancellationToken cancellationToken);
 }

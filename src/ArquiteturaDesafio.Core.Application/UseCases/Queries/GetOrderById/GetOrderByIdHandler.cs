@@ -1,4 +1,5 @@
-﻿using ArquiteturaDesafio.Core.Domain.Interfaces;
+﻿using ArquiteturaDesafio.Core.Domain.Entities;
+using ArquiteturaDesafio.Core.Domain.Interfaces;
 using AutoMapper;
 using MediatR;
 
@@ -7,35 +8,30 @@ namespace ArquiteturaDesafio.Application.UseCases.Queries.GetOrderById
     public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdRequest, GetOrderByIdResponse>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IOrderRepository _saleRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IProductRepository _productRepository;
+        private readonly IOrderReadRepository _saleRepository;
         private readonly IMapper _mapper;
 
         public GetOrderByIdHandler(IUnitOfWork unitOfWork,
-            IOrderRepository saleRepository,
-            IUserRepository userRepository,
-            IProductRepository productRepository,
+            IOrderReadRepository saleRepository,
             IMapper mapper
             )
         {
             _unitOfWork = unitOfWork;
             _saleRepository = saleRepository;
-            _userRepository = userRepository;
-            _productRepository = productRepository;
             _mapper = mapper;
         }
         public async Task<GetOrderByIdResponse> Handle(GetOrderByIdRequest request, CancellationToken cancellationToken)
         {
 
-            var sale = await _saleRepository.GetSaleWithItemsAsync(request.id, cancellationToken);
+            string filtro = request.id.ToString();
+            List<OrderRead> sale = await _saleRepository.Filter(x=>x.OrderId == filtro, cancellationToken);
 
-            if (sale is null)
+            if (sale is null || sale.Count == 0)
             {
-                throw new KeyNotFoundException($"Sale with ID  {request.id} does not exist in our database");
+                throw new KeyNotFoundException($"Sale com ID  {request.id} não foi localizado na base de dados.");
             }
-
-            return _mapper.Map<GetOrderByIdResponse>(sale);
+            var saleReturn = sale.FirstOrDefault();
+            return _mapper.Map<GetOrderByIdResponse>(saleReturn);
         }
     }
 }

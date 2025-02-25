@@ -23,6 +23,16 @@ namespace ArquiteturaDesafio.Core.Domain.Entities
             UnitPrice = price;
         }
 
+        public OrderItem(Guid saleId, Guid productId, string title, int totalQuantity, decimal price, Guid id)
+        {
+            OrderId = saleId;
+            ProductId = productId;
+            Name = title;
+            Quantity = totalQuantity;
+            UnitPrice = price;
+            Id = id;
+        }
+
         public Guid OrderId { get; set; } // Relacionamento com a venda (FK)
         public Guid ProductId { get; set; } // Identidade Externa do Produto
         public string Name { get; set; } // Nome do Produto (desnormalizado)

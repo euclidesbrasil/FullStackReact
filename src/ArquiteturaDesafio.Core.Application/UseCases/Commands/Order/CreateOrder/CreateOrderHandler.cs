@@ -75,7 +75,7 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.CreateSale
                     new CustomerOrder(customer.Id, customer.Name, customer.Identification.Email, customer.Identification.Phone),
                     sale.OrderDate,
                     sale.TotalAmount,
-                    sale.Status.ToString(), sale.Items.Select(i => new OrderItemRead(i.ProductId.ToString(), i.Name, i.Quantity, i.UnitPrice, i.TotalPrice)).ToList()
+                    sale.Status.ToString(), sale.Items.Select(i => new OrderItemRead(i.ProductId.ToString(), i.Name, i.Quantity, i.UnitPrice, i.TotalPrice, i.Id)).ToList()
                     );
 
 

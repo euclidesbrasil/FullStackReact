@@ -1,5 +1,6 @@
 ﻿using Ambev.Core.Application.UseCases.DTOs;
 using ArquiteturaDesafio.Core.Application.UseCases.DTOs;
+using ArquiteturaDesafio.Core.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +9,7 @@ using System.Threading.Tasks;
 
 namespace ArquiteturaDesafio.Application.UseCases.Queries.GetOrderById
 {
-    public class GetOrderByIdResponse : SaleWithDetaislsDTO
+    public class GetOrderByIdResponse : OrderReadDTO
     {
-        public decimal TotalAmount
-        {
-            get
-            {
-                return Items?.Sum(item => item.TotalPrice) ?? 0;
-            }
-        }
     }
 }

@@ -10,15 +10,19 @@ public class DeleteOrderHandler : IRequestHandler<DeleteOrderRequest, DeleteOrde
     private readonly IUnitOfWork _unitOfWork;
     private readonly IOrderRepository _repository;
     private readonly IMapper _mapper;
+    private readonly IProducerMessage _producerMessage;
 
     public DeleteOrderHandler(IUnitOfWork unitOfWork,
         IOrderRepository repository,
-        IMapper mapper
+        IMapper mapper,
+        IProducerMessage producerMessage
+
         )
     {
         _unitOfWork = unitOfWork;
         _repository = repository;
         _mapper = mapper;
+        _producerMessage = producerMessage;
     }
 
     public async Task<DeleteOrderResponse> Handle(DeleteOrderRequest request, CancellationToken cancellationToken)
@@ -32,6 +36,12 @@ public class DeleteOrderHandler : IRequestHandler<DeleteOrderRequest, DeleteOrde
 
         _repository.Delete(order);
         await _unitOfWork.Commit(cancellationToken);
+
+        await _unitOfWork.Commit(cancellationToken);
+        OrderRead orderEvent = new OrderRead(request.id);
+
+        await _producerMessage.SendMessage(orderEvent, "order.deleted");
+
         return new DeleteOrderResponse("Venda removida com sucesso.");
     }
 }
