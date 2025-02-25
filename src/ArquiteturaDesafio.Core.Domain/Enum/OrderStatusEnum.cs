@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace ArquiteturaDesafio.Core.Domain.Enum
 {
-    public enum TransactionType
-    {
-        Credit = 1,
-        Debit = 2
-    }
+    public enum OrderStatus { Active = 1, Canceled = 2}
+
 }

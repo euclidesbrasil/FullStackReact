@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArquiteturaDesafio.Core.Domain.Enum;
 
 namespace ArquiteturaDesafio.Core.Domain.Entities
 {
@@ -13,6 +14,8 @@ namespace ArquiteturaDesafio.Core.Domain.Entities
         public Guid CustomerId { get; set; }  // Identidade Externa do Cliente
         public DateTime OrderDate { get; set; } // Data da venda
         public List<OrderItem> Items { get; set; } // Relacionamento com itens da venda
+
+        public OrderStatus Status { get; set; } = OrderStatus.Active;// Status da venda
 
         public decimal TotalAmount
         {

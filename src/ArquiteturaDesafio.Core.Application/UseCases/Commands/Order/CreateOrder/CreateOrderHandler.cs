@@ -12,6 +12,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ArquiteturaDesafio.Core.Domain.Entities;
+using ArquiteturaDesafio.Core.Application.UseCases.DTOs;
+using ArquiteturaDesafio.Core.Domain.ValueObjects;
 namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.CreateSale
 {
 
@@ -44,14 +46,14 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.CreateSale
             try
             {
                 var sale = _mapper.Map<Entities.Order>(request);
-                
+
                 var allProducts = await _productRepository.GetAll(cancellationToken);
-                var customer = await _customerRepository.Filter(x=>x.Id == request.CustomerId, cancellationToken);
-                if (customer is null)
+                var customers = await _customerRepository.Filter(x => x.Id == request.CustomerId, cancellationToken);
+                if (customers is null)
                 {
                     throw new KeyNotFoundException($"Customer with ID {request.CustomerId} does not exist in our database");
                 }
-
+                var customer = customers.FirstOrDefault();
 
 
                 var idsProducts = request.Items.Select(i => i.ProductId).ToList();
@@ -65,14 +67,23 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Order.CreateSale
                 var itens = _mapper.Map<List<Entities.OrderItem>>(request.Items);
                 sale.ClearItems();
                 sale.AddItems(itens, productsUsed);
-                
+
                 _saleRepository.Create(sale);
                 await _unitOfWork.Commit(cancellationToken);
-                // var createdSaleEvent = sale.GetSaleCreatedEvent();
-                // await _producerMessage.SendMessage(createdSaleEvent, "sale.created");
+                OrderRead orderEvent = new OrderRead(
+                    sale.Id,
+                    new CustomerOrder(customer.Id, customer.Name, customer.Identification.Email, customer.Identification.Phone),
+                    sale.OrderDate,
+                    sale.TotalAmount,
+                    sale.Status.ToString(), sale.Items.Select(i => new OrderItemRead(i.ProductId.ToString(), i.Name, i.Quantity, i.UnitPrice, i.TotalPrice)).ToList()
+                    );
+
+
+                await _producerMessage.SendMessage(orderEvent, "order.created");
 
                 return new CreateOrderResponse(sale.Id);
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 string erro = e.ToString();
                 throw;

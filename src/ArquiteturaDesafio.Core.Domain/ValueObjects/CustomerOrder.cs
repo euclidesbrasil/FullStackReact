@@ -8,9 +8,17 @@ using System.Threading.Tasks;
 
 namespace ArquiteturaDesafio.Core.Domain.ValueObjects
 {
-    public class CustumerOrder : ValueObject
+    public class CustomerOrder : ValueObject
     {
-        public Guid Id { get; set; }
+        public CustomerOrder(Guid id, string name, string email, string phone)
+        {
+            Id = id.ToString();
+            Name = name;
+            Email = email;
+            Phone = phone;
+        }
+
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }

@@ -11,19 +11,25 @@ namespace ArquiteturaDesafio.Core.Domain.Entities
 {
     public class OrderRead : BaseEntityNoRelational
     {
-        public class OrderReadModel
+        public OrderRead(Guid orderId, CustomerOrder customer, DateTime orderDate, decimal totalAmount, string status, List<OrderItemRead> items)
         {
-            public Guid OrderId { get; set; } // ID original do pedido no SQL Server
-
-            public CustumerOrder Customer { get; set; }
-
-            public DateTime OrderDate { get; set; }
-
-            public decimal TotalAmount { get; set; }
-
-            public string Status { get; set; } // Pode ser "Pending", "Completed", etc.
-
-            public List<OrderItemRead> Items { get; set; }
+            OrderId = orderId.ToString();
+            Customer = customer;
+            OrderDate = orderDate;
+            TotalAmount = totalAmount;
+            Status = status;
+            Items = items;
         }
+        public string OrderId { get; set; } // ID original do pedido no SQL Server
+
+        public CustomerOrder Customer { get; set; }
+
+        public DateTime OrderDate { get; set; }
+
+        public decimal TotalAmount { get; set; }
+
+        public string Status { get; set; } // Pode ser "Pending", "Completed", etc.
+
+        public List<OrderItemRead> Items { get; set; }
     }
 }

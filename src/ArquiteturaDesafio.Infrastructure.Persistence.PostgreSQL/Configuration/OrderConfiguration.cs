@@ -26,7 +26,12 @@ namespace ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Configuration
             builder.Property(s => s.TotalAmount)
                 .HasPrecision(18, 2);
 
-           builder.HasMany(s => s.Items)
+            // Enum armazenado como string (opcional)
+            builder.Property(u => u.Status)
+                .HasConversion<string>()
+                .IsRequired();
+
+            builder.HasMany(s => s.Items)
                 .WithOne()
                 .HasForeignKey(i => i.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);

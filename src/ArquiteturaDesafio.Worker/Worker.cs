@@ -11,16 +11,18 @@ namespace ArquiteturaDesafio.Worker
     {
         private readonly ILogger<Worker> _logger;
         private readonly IConsumerMessage _consumer;
+        private readonly IOrderReadRepository _repository;
 
-        public Worker(ILogger<Worker> logger, IConsumerMessage consumer)
+        public Worker(ILogger<Worker> logger, IConsumerMessage consumer, IOrderReadRepository repository)
         {
             _logger = logger;
             _consumer = consumer;
+            _repository = repository;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _consumer.ConsumeQueue("transaction.created", ProcessMessage, stoppingToken);
+            await _consumer.ConsumeQueue("order.created", ProcessMessage, stoppingToken);
         }
 
         private async Task ProcessMessage(string message)
@@ -35,10 +37,25 @@ namespace ArquiteturaDesafio.Worker
                 // Parse da mensagem para um JObject
                 JObject jsonObject = JObject.Parse(message);
 
+                // Extrair a parte "Data" do JSON e converter para a classe TransactionXYZ
+                OrderRead _transaction = jsonObject.ToObject<OrderRead>();
+
+                // Recupera o saldo diário da data da transação
+                var filterOrders= await _repository.Filter(x => x.OrderId == _transaction.OrderId, CancellationToken.None);
+
+                // Verifica se é um novo realmente
+                var isNew = filterOrders.Count == 0;
+
+                // Se novo inclui
+                if (isNew)
+                {
+                    _transaction.Id = Guid.NewGuid().ToString();
+                    await _repository.Create(_transaction);
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao salvar o relatório de saldo diário");
+                _logger.LogError(ex, "Erro ao salvar o order read.");
             }
         }
     }

@@ -10,7 +10,7 @@ namespace ArquiteturaDesafio.Infrastructure.Persistence.Repositories;
 public class OrderReadRepository : BaseRepositoryNoRelational<OrderRead>, IOrderReadRepository
 {
     public OrderReadRepository(IMongoDatabase database)
-        : base(database, "OrderReadRepository")
+        : base(database, "OrderRead")
     {
     }
 

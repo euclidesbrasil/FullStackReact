@@ -27,7 +27,7 @@ public class BaseRepositoryNoRelational<T> : IBaseRepositoryNoRelational<T> wher
     {
         await _collection.DeleteOneAsync(x => x.Id == entity.Id);
     }
-    public async Task<T> Get(Guid id, CancellationToken cancellationToken)
+    public async Task<T> Get(string id, CancellationToken cancellationToken)
     {
         return await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
     }
