@@ -1,8 +1,8 @@
-# API Geral - Gestão de Crédito e Débitos
+# API Geral - Gestão de Pedidos.
 
 ## 📌 Descrição
 
-Esta API fornece recursos para gerenciar autenticação, transações e expor os dados via api de relatório de consolidação diário 
+Esta API fornece recursos para gerenciar autenticação, pedidos e as leituras via banco não relacional.
 
 ## 🛠 Tecnologias Utilizadas
 
@@ -21,15 +21,15 @@ Antes de baixar o projeto, certifique-se de ter instalado:
 - **SqlServer Express 2022 ** (Versão utilizada: 17.2-3) [Baixar aqui](https://www.microsoft.com/pt-br/download/details.aspx?id=104781)
 - **MongoDB Community** (Versão utilizada: 7.0.16) [Baixar aqui](https://www.mongodb.com/try/download/community-edition/releases)
 - **RabbitMQ** (Versão utilizada: 4.0.5) [Baixar aqui](https://www.rabbitmq.com/docs/install-windows)
-
+- **Visual Code** (Versão utilizada: 1.97.2)
 ## 🚀 Configuração Antes da Execução
 
-### 1. Configuração do PostgreSQL
+### 1. Configuração do SQL SERVER
 
 No projeto **ArquiteturaDesafio.General.Api**, abra o arquivo `appsettings.json` e ajuste a seção `DefaultConnection` com as credenciais do seu banco de dados local:
 
 ```json
-"DefaultConnection": "Host=localhost;Port=5432;Database=ARQDESAFIODOTNET;Username=postgres;Password=admin"
+"DefaultConnection": "Data Source=DESKTOP-784BBJ9\\SQLEXPRESS;Initial Catalog=ARQ_FULLSTACK;User ID=sa;Password=admin;MultipleActiveResultSets=True;TrustServerCertificate=True"
 ```
 
 ### 2. Configuração do MongoDB
@@ -63,17 +63,6 @@ Para utilizar os endpoints, é necessário obter um token de autenticação. Uti
 
 ### 🔹 Autenticação
 - **POST /auth/login** → Autentica um usuário e retorna um token JWT.
-
-### 🔹 Relatórios
-- **GET /Report/Daily/Mongodb?date=YYYY-MM-DD** → Retorna relatório diário do MongoDB.
-- **GET /Report/Daily/Postgres?date=YYYY-MM-DD** → Retorna relatório diário do PostgreSQL.
-
-### 🔹 Transações
-- **POST /Transaction** → Cria uma nova transação.
-- **PUT /Transaction?id=UUID** → Atualiza uma transação existente.
-- **DELETE /Transaction?id=UUID** → Remove uma transação.
-- **GET /Transaction** → Retorna uma lista paginada de transações.
-- **GET /Transaction/{id}** → Retorna detalhes de uma transação específica.
 
 ### 🔹 Usuários
 - **POST /Users** → Cria um novo usuário.
