@@ -25,6 +25,17 @@ export default function OrdersList() {
     fetchOrders();
   }, []);
 
+  const handleDelete = async (orderId) => {
+    try {
+      const token = localStorage.getItem("token");
+      setAuthToken(token);
+      await api.delete(`/Orders?id=${orderId}`);
+      setOrders(orders.filter(order => order.orderId !== orderId));
+    } catch (error) {
+      console.error("Erro ao excluir pedido:", error);
+    }
+  };
+
   return (
     <div>
       <Typography variant="h4" gutterBottom>
@@ -57,6 +68,9 @@ export default function OrdersList() {
                   <TableCell>
                     <Button variant="contained" color="primary" component={Link} to={`/orders/edit/${order.orderId}`}>
                       Editar
+                    </Button>
+                    <Button variant="contained" color="secondary" onClick={() => handleDelete(order.orderId)} style={{ marginLeft: '10px' }}>
+                      Excluir
                     </Button>
                   </TableCell>
                 </TableRow>

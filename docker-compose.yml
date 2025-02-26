@@ -5,9 +5,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000:8080"
+      - "5001:443"
+    depends_on:
+      - sqlserver 
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=localhost,1434;Initial Catalog=ARQ_FULLSTACK;User ID=sa;Password=Admin@123;TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=Server=desafio_sqlserver,1433;Initial Catalog=ARQ_FULLSTACK;User ID=sa;Password=Admin@123;TrustServerCertificate=True
       - MongoDbSettings__ConnectionString=mongodb://desafio_mongodb:27017
       - MongoDbSettings__DatabaseName=desafio
       - RabbitMQSettings__HostName=desafio_rabbitmq
@@ -40,11 +43,13 @@ services:
     container_name: desafio_sqlserver
     hostname: desafio_sqlserver
     ports:
-      - "1434:1433"
+      - "1433:1433"
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_PID=Express
       - SA_PASSWORD=Admin@123
+      - MSSQL_SA_PASSWORD=Admin@123
+      - MSSQL_USER=sa
     volumes:
       - sqlserver_data:/var/opt/mssql
 

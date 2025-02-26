@@ -2,7 +2,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const api = axios.create({
-  baseURL: "https://localhost:7171/", // Substitua pela URL base da sua API
+  baseURL: "http://localhost:5000/", // Substitua pela URL base da sua API
 });
 
 // Função para configurar o token Bearer

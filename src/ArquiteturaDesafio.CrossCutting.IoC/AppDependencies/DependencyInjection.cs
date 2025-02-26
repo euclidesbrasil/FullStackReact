@@ -28,7 +28,7 @@ namespace ArquiteturaDesafio.Infrastructure.CrossCutting.IoC
                     configuration.GetConnectionString("DefaultConnection")),
                     ServiceLifetime.Scoped
                 );
-
+            Console.WriteLine($"Banco de dados a ser chamado:{configuration.GetConnectionString("DefaultConnection")}");
             // MongoDB
             services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
 
