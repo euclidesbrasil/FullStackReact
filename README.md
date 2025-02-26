@@ -36,7 +36,7 @@ No projeto **ArquiteturaDesafio.General.Api**, abra o arquivo `appsettings.json`
 
 No mesmo arquivo `appsettings.json`, há uma seção `ConnectionString` que define a conexão com o MongoDB. Ajuste conforme necessário para o seu ambiente.
 
-### 3. Executando o Projeto
+### 3. Executando o Projeto API
 
 Basta executar o projeto para iniciar a API. Na primeira execução, o banco de dados será criado automaticamente e os dados iniciais serão carregados. Poderá ser usado via Swagger;
 
@@ -46,6 +46,8 @@ docker-compose up --build -d
 ```
 Isso fará que o docker build a aplicação e suba as imagens necessárias.
 
+Isso irá subir a api, que estará acessivel no link: http://localhost:5000/swagger/index.html
+
 ATENÇÃO! Em ambos os casos, há um Worker responsável por ler as mensagens enviadas via RabbitMQ para poder gerar a versão do relatório via MongoDB;
 
 Localmente, você deve executar o exe manualmente, pelo visual studio (Depurar nova insância sem inicializar) ou navegar até a pasta do proejto, apos efetuar o Rebuild da aplicação e executar o ArquiteturaDesafio.Worker.exe: src\ArquiteturaDesafio.Worker\bin\Debug\net8.0 ou em src\ArquiteturaDesafio.Worker\bin\Release\net8.0
@@ -53,6 +55,13 @@ Localmente, você deve executar o exe manualmente, pelo visual studio (Depurar n
 Já no Docker, caso o serviço não seja iniciado automaticamente, inicar o mesmo.
 Apos o imagem SqlServer subir e estiver funcional, pode ser que tenha que habilitar  as Transações Distribuidas (TALVEZ...); Para isso, acesse localmente o servidor "localhost, 1433" com o usuario "sa" e senha "Admin@123" (sugetsão: via SqlMangment);
 Clique com o botão direito no servidor e seleciona a opções Propriedades->Conexões-> e marque a opção "Requer transações distribuídas para a comunicação servidor a servidor". Salve.
+
+### 3. Executando o Projeto REACT
+Para rodar a aplicação (que está configuarada para consumir a api do docker), 
+Navegue até a pasta do project react ( src\React\front-desafio ) e abra via VS Code;
+No terminal execute o comando "npm start" e a aplicação será inciada.
+Caso rode localmente via Visual Studio a API, ajuste os arquivos axiosConfig.js e authService.js, para ajustar a url de destino da API.
+
 
 ## 🔐 Autenticação
 
