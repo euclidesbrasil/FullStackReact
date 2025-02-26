@@ -49,9 +49,12 @@ Isso fará que o docker build a aplicação e suba as imagens necessárias.
 Isso irá subir a api, que estará acessivel no link: http://localhost:5000/swagger/index.html
 
 ATENÇÃO! 
-Em ambos os casos, há um Worker responsável por ler as mensagens enviadas via RabbitMQ para poder gerar a versão do relatório via MongoDB;
+Em ambos os casos, há um Worker responsável por ler as mensagens enviadas via RabbitMQ para poder 
+gerar a versão do consulta via MongoDB;
 
-Localmente, você deve executar o exe manualmente, pelo visual studio (Depurar nova insância sem inicializar) ou navegar até a pasta do proejto, apos efetuar o Rebuild da aplicação e executar o ArquiteturaDesafio.Worker.exe: src\ArquiteturaDesafio.Worker\bin\Debug\net8.0 ou em src\ArquiteturaDesafio.Worker\bin\Release\net8.0
+Localmente, você deve executar o exe manualmente, pelo visual studio (Depurar nova insância sem inicializar) ou 
+navegar até a pasta do proejto, apos efetuar o Rebuild da aplicação e executar o ArquiteturaDesafio.Worker.exe: 
+src\ArquiteturaDesafio.Worker\bin\Debug\net8.0 ou em src\ArquiteturaDesafio.Worker\bin\Release\net8.0
 
 Já no Docker, caso o serviço não seja iniciado automaticamente, inicar o mesmo, mas está configurado para iniciar sozinho.
 Apos o imagem SqlServer subir e estiver funcional, pode ser que tenha que habilitar  as Transações Distribuidas (TALVEZ...); Para isso, acesse localmente o servidor "localhost, 1433" com o usuario "sa" e senha "Admin@123" (sugetsão: via SqlManagement);
