@@ -51,6 +51,9 @@ ATENÇÃO! Em ambos os casos, há um Worker responsável por ler as mensagens en
 Localmente, você deve executar o exe manualmente, pelo visual studio (Depurar nova insância sem inicializar) ou navegar até a pasta do proejto, apos efetuar o Rebuild da aplicação e executar o ArquiteturaDesafio.Worker.exe: src\ArquiteturaDesafio.Worker\bin\Debug\net8.0 ou em src\ArquiteturaDesafio.Worker\bin\Release\net8.0
 
 Já no Docker, caso o serviço não seja iniciado automaticamente, inicar o mesmo.
+Apos o imagem SqlServer subir e estiver funcional, pode ser que tenha que habilitar  as Transações Distribuidas (TALVEZ...); Para isso, acesse localmente o servidor "localhost, 1433" com o usuario "sa" e senha "Admin@123" (sugetsão: via SqlMangment);
+Clique com o botão direito no servidor e seleciona a opções Propriedades->Conexões-> e marque a opção "Requer transações distribuídas para a comunicação servidor a servidor". Salve.
+
 ## 🔐 Autenticação
 
 Para utilizar os endpoints, é necessário obter um token de autenticação. Utilize as credenciais iniciais:
@@ -61,11 +64,385 @@ Para utilizar os endpoints, é necessário obter um token de autenticação. Uti
 
 ## 📌 Endpoints
 
-### 🔹 Autenticação
-- **POST /auth/login** → Autentica um usuário e retorna um token JWT.
+- [Visão Geral](#visão-geral)
+- [Autenticação](#autenticação)
+- [Endpoints de Clientes](#endpoints-de-clientes)
+- [Endpoints de Pedidos](#endpoints-de-pedidos)
+- [Endpoints de Produtos](#endpoints-de-produtos)
+- [Endpoints de Usuários](#endpoints-de-usuários)
+- [Esquemas e Componentes](#esquemas-e-componentes)
+- [Segurança](#segurança)
+- [Exemplos de Uso](#exemplos-de-uso)
+- [Observações Finais](#observações-finais)
 
-### 🔹 Usuários
-- **POST /Users** → Cria um novo usuário.
-- **PUT /Users?id=UUID** → Atualiza um usuário existente.
-- **GET /Users** → Retorna uma lista paginada de usuários.
-- **GET /Users/{id}** → Retorna detalhes de um usuário específico.
+---
+
+## Visão Geral
+
+A API foi projetada para o controle de pedidos e integra duas fontes de dados:
+- **SQL Server:** para o controle de pedidos e clientes.
+- **MongoDB:** para armazenar informações complementares.
+
+O projeto utiliza autenticação via JWT (Bearer) para proteger os endpoints.
+
+---
+
+## Autenticação
+
+### POST `/auth/login`
+
+**Descrição:**  
+Realiza o login de um usuário.
+
+**Request Body:**  
+Formato `application/json` com o esquema `AuthenticateUserRequest`:
+- `username` (string, opcional)
+- `password` (string, opcional)
+
+**Respostas:**
+- **200 Success:** Login realizado com sucesso.
+- **400 Bad Request:** Dados inválidos (retorna um objeto `ProblemDetails`).
+- **500 Server Error:** Erro no servidor.
+
+---
+
+## Endpoints de Clientes
+
+### POST `/Customers`
+
+**Descrição:**  
+Cria um novo cliente.
+
+**Request Body:**  
+- Schema: `CreateCustomerRequest`  
+  Campos incluem: `id` (UUID), `name`, `identification` (usando o esquema `InfoContactDTO`) e datas de criação/atualização.
+
+**Resposta:**
+- **200 Success:** Retorna um objeto `CreateCustomerResponse` contendo o `id` do novo cliente.
+
+---
+
+### PUT `/Customers`
+
+**Descrição:**  
+Atualiza os dados de um cliente existente.
+
+**Parâmetros:**
+- Query Parameter: `id` (string, UUID)
+
+**Request Body:**  
+- Schema: `UpdateCustomerRequest`
+
+**Resposta:**
+- **200 Success:** Atualização realizada com sucesso.
+
+---
+
+### DELETE `/Customers`
+
+**Descrição:**  
+Exclui um cliente.
+
+**Parâmetros:**
+- Query Parameter: `id` (string, UUID)
+
+**Resposta:**
+- **200 Success:** Exclusão realizada com sucesso.
+
+---
+
+### GET `/Customers`
+
+**Descrição:**  
+Lista os clientes com suporte a paginação, filtros e ordenação.
+
+**Parâmetros de Query:**
+- `_page`: Número da página (integer, padrão: 1)
+- `_size`: Quantidade de itens por página (integer, padrão: 10)
+- `filters`: Objeto com filtros (chave/valor)
+- `_order`: Ordem de classificação (string, padrão: "id asc")
+
+**Resposta:**
+- **200 Success:** Retorna um array de `GetCustomersQueryResponse`.
+
+---
+
+### GET `/Customers/{id}`
+
+**Descrição:**  
+Retorna os detalhes de um cliente específico.
+
+**Parâmetros de Path:**
+- `id`: Identificador do cliente (string, UUID)
+
+**Resposta:**
+- **200 Success:** Dados do cliente.
+
+---
+
+## Endpoints de Pedidos
+
+### POST `/Orders`
+
+**Descrição:**  
+Cria um novo pedido.
+
+**Request Body:**  
+- Schema: `CreateOrderRequest`  
+  Campos incluem: `orderDate`, `customerId` (UUID) e uma lista de itens (array de `OrderItemBaseDTO`).
+
+**Respostas:**
+- **201 Created:** Pedido criado, retorna `CreateOrderResponse` com o `id` do pedido.
+- **400 Bad Request / 401 Unauthorized / 500 Server Error:** Em caso de erro.
+
+---
+
+### PUT `/Orders`
+
+**Descrição:**  
+Atualiza um pedido existente.
+
+**Parâmetros:**
+- Query Parameter: `id` (string, UUID)
+
+**Request Body:**  
+- Schema: `UpdateOrderRequest`
+
+**Respostas:**
+- **204 No Content:** Atualização realizada com sucesso.
+- **400/401/500:** Em caso de erro.
+
+---
+
+### DELETE `/Orders`
+
+**Descrição:**  
+Exclui um pedido.
+
+**Parâmetros:**
+- Query Parameter: `id` (string, UUID)
+
+**Respostas:**
+- **204 No Content:** Exclusão realizada com sucesso.
+- **400/401/500:** Em caso de erro.
+
+---
+
+### GET `/Orders`
+
+**Descrição:**  
+Lista os pedidos com suporte a paginação, filtros e ordenação.
+
+**Parâmetros de Query:**
+- `_page`: Número da página (integer, padrão: 1)
+- `_size`: Quantidade de itens por página (integer, padrão: 10)
+- `filters`: Objeto com filtros (chave/valor)
+- `_order`: Ordem de classificação (string, padrão: "id asc")
+
+**Respostas:**
+- **200 Success:** Retorna um array de `GetOrdersQueryResponse`.
+- **400/401/500:** Em caso de erro.
+
+---
+
+### GET `/Orders/{id}`
+
+**Descrição:**  
+Retorna os detalhes de um pedido específico.
+
+**Parâmetros de Path:**
+- `id`: Identificador do pedido (string, UUID)
+
+**Respostas:**
+- **200 Success:** Dados do pedido, conforme o esquema `GetOrderByIdResponse`.
+- **400/401/500:** Em caso de erro.
+
+---
+
+## Endpoints de Produtos
+
+### POST `/Products`
+
+**Descrição:**  
+Cria um novo produto.
+
+**Request Body:**  
+- Schema: `CreateProductRequest`  
+  Campos incluem: `name` (string) e `price` (double).
+
+**Respostas:**
+- **201 Created:** Produto criado, retorna `CreateProductResponse` com o `id` do produto.
+- **400/401/500:** Em caso de erro.
+
+---
+
+### PUT `/Products`
+
+**Descrição:**  
+Atualiza um produto existente.
+
+**Parâmetros:**
+- Query Parameter: `id` (string, UUID)
+
+**Request Body:**  
+- Schema: `UpdateProductRequest`
+
+**Respostas:**
+- **204 No Content:** Atualização realizada com sucesso.
+- **400/401/500:** Em caso de erro.
+
+---
+
+### DELETE `/Products`
+
+**Descrição:**  
+Exclui um produto.
+
+**Parâmetros:**
+- Query Parameter: `id` (string, UUID)
+
+**Respostas:**
+- **204 No Content:** Exclusão realizada com sucesso.
+- **400/401/500:** Em caso de erro.
+
+---
+
+### GET `/Products`
+
+**Descrição:**  
+Lista os produtos com suporte a paginação, filtros e ordenação.
+
+**Parâmetros de Query:**
+- `_page`: Número da página (integer, padrão: 1)
+- `_size`: Quantidade de itens por página (integer, padrão: 10)
+- `filters`: Objeto com filtros (chave/valor)
+- `_order`: Ordem de classificação (string, padrão: "id asc")
+
+**Respostas:**
+- **200 Success:** Retorna um array de `GetProductsQueryResponse`.
+- **400/401/500:** Em caso de erro.
+
+---
+
+### GET `/Products/{id}`
+
+**Descrição:**  
+Retorna os detalhes de um produto específico.
+
+**Parâmetros de Path:**
+- `id`: Identificador do produto (string, UUID)
+
+**Respostas:**
+- **200 Success:** Dados do produto.
+- **400/401/500:** Em caso de erro.
+
+---
+
+## Endpoints de Usuários
+
+### POST `/Users`
+
+**Descrição:**  
+Cria um novo usuário.
+
+**Request Body:**  
+- Schema: `CreateUserRequest`  
+  Campos incluem: `email`, `username`, `firstname`, `lastname`, `address` (com o esquema `AddressDto`), `phone`, `status`, `role`, `password` e `id` (UUID).
+
+**Respostas:**
+- **201 Created:** Usuário criado, retorna `CreateUserResponse` com o `id` do usuário.
+- **400/401/500:** Em caso de erro.
+
+---
+
+### PUT `/Users`
+
+**Descrição:**  
+Atualiza os dados de um usuário.
+
+**Parâmetros:**
+- Query Parameter: `id` (string, UUID)
+
+**Request Body:**  
+- Schema: `UpdateUserRequest`
+
+**Respostas:**
+- **204 No Content:** Atualização realizada com sucesso.
+- **400/401/500:** Em caso de erro.
+
+---
+
+### DELETE `/Users`
+
+**Descrição:**  
+Exclui um usuário.
+
+**Parâmetros:**
+- Query Parameter: `id` (string, UUID)
+
+**Respostas:**
+- **204 No Content:** Exclusão realizada com sucesso.
+- **400/401/500:** Em caso de erro.
+
+---
+
+### GET `/Users`
+
+**Descrição:**  
+Lista os usuários com suporte a paginação, filtros e ordenação.
+
+**Parâmetros de Query:**
+- `_page`: Número da página (integer, padrão: 1)
+- `_size`: Quantidade de itens por página (integer, padrão: 10)
+- `filters`: Objeto com filtros (chave/valor)
+- `_order`: Ordem de classificação (string, padrão: "id asc")
+
+**Respostas:**
+- **200 Success:** Retorna um array de `GetUsersQueryResponse`.
+- **400/500:** Em caso de erro.
+
+---
+
+### GET `/Users/{id}`
+
+**Descrição:**  
+Retorna os detalhes de um usuário específico.
+
+**Parâmetros de Path:**
+- `id`: Identificador do usuário (string, UUID)
+
+**Respostas:**
+- **200 Success:** Dados do usuário, conforme o esquema `GetUsersByIdResponse`.
+- **400/401/500:** Em caso de erro.
+
+---
+
+## Esquemas e Componentes
+
+A API utiliza diversos esquemas para definir a estrutura dos dados. Entre os principais estão:
+
+- **AuthenticateUserRequest:**  
+  - `username` (string)  
+  - `password` (string)
+
+- **CreateCustomerRequest / CreateCustomerResponse / UpdateCustomerRequest:**  
+  Estruturas para criação e atualização de clientes, incluindo identificação, nome e datas.
+
+- **CreateOrderRequest / CreateOrderResponse / UpdateOrderRequest:**  
+  Estruturas para gerenciamento de pedidos. O pedido inclui a data, o ID do cliente e uma lista de itens (`OrderItemBaseDTO` ou `OrderItemRead`).
+
+- **CreateProductRequest / CreateProductResponse / UpdateProductRequest:**  
+  Estruturas para gerenciamento de produtos, com campos como nome e preço.
+
+- **CreateUserRequest / CreateUserResponse / UpdateUserRequest:**  
+  Estruturas para gerenciamento de usuários, que incluem dados pessoais e informações de endereço (via `AddressDto`).
+
+- **Outros DTOs:**  
+  `CustomerDTO`, `CustomerOrderDTO`, `GeolocationDto`, `InfoContactDTO`, `OrderItemBaseDTO`, `OrderItemRead`, `ProductDTO`, `SaleItemDTO`, `SaleWithDetaislsDTO`, `UserDTO` e enums como `UserRole`, `UserStatus` e `OrderStatus`.
+
+---
+
+## Segurança
+
+A API utiliza autenticação **Bearer** com JWT. Para acessar os endpoints protegidos, envie o token no header:
+
