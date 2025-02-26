@@ -48,15 +48,17 @@ Isso fará que o docker build a aplicação e suba as imagens necessárias.
 
 Isso irá subir a api, que estará acessivel no link: http://localhost:5000/swagger/index.html
 
-ATENÇÃO! Em ambos os casos, há um Worker responsável por ler as mensagens enviadas via RabbitMQ para poder gerar a versão do relatório via MongoDB;
+ATENÇÃO! 
+Em ambos os casos, há um Worker responsável por ler as mensagens enviadas via RabbitMQ para poder gerar a versão do relatório via MongoDB;
 
 Localmente, você deve executar o exe manualmente, pelo visual studio (Depurar nova insância sem inicializar) ou navegar até a pasta do proejto, apos efetuar o Rebuild da aplicação e executar o ArquiteturaDesafio.Worker.exe: src\ArquiteturaDesafio.Worker\bin\Debug\net8.0 ou em src\ArquiteturaDesafio.Worker\bin\Release\net8.0
 
-Já no Docker, caso o serviço não seja iniciado automaticamente, inicar o mesmo.
-Apos o imagem SqlServer subir e estiver funcional, pode ser que tenha que habilitar  as Transações Distribuidas (TALVEZ...); Para isso, acesse localmente o servidor "localhost, 1433" com o usuario "sa" e senha "Admin@123" (sugetsão: via SqlMangment);
+Já no Docker, caso o serviço não seja iniciado automaticamente, inicar o mesmo, mas está configurado para iniciar sozinho.
+Apos o imagem SqlServer subir e estiver funcional, pode ser que tenha que habilitar  as Transações Distribuidas (TALVEZ...); Para isso, acesse localmente o servidor "localhost, 1433" com o usuario "sa" e senha "Admin@123" (sugetsão: via SqlManagement);
 Clique com o botão direito no servidor e seleciona a opções Propriedades->Conexões-> e marque a opção "Requer transações distribuídas para a comunicação servidor a servidor". Salve.
+Se for necessário realizar o passo acima, mando restartar a api, via docker, pois o migration irá criar o banco para você.
 
-### 3. Executando o Projeto REACT
+### 3.1 Executando o Projeto REACT
 Para rodar a aplicação (que está configuarada para consumir a api do docker), 
 Navegue até a pasta do project react ( src\React\front-desafio ) e abra via VS Code;
 No terminal execute o comando "npm start" e a aplicação será inciada.
@@ -105,8 +107,8 @@ Realiza o login de um usuário.
 
 **Request Body:**  
 Formato `application/json` com o esquema `AuthenticateUserRequest`:
-- `username` (string, opcional)
-- `password` (string, opcional)
+- `username` (string)
+- `password` (string)
 
 **Respostas:**
 - **200 Success:** Login realizado com sucesso.
