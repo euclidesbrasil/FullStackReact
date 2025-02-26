@@ -8,5 +8,6 @@ namespace ArquiteturaDesafio.Application.UseCases.Commands.Customer.CreateCustom
 {
     public class CreateCustomerRequest : CustomerDTO, IRequest<CreateCustomerResponse>
     {
+        public Guid Id { get; internal set; }
     }
 }

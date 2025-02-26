@@ -14,7 +14,7 @@ export async function login(username, password) {
       username,
       password,
     });
-    return response.data.token; // Supondo que o token seja retornado no campo 'token'
+    return response.data.token; 
   } catch (error) {
     console.error('Erro ao autenticar:', error);
     throw error;

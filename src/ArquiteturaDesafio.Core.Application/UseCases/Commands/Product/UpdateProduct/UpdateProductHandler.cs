@@ -4,6 +4,7 @@ using MediatR;
 using Entities = ArquiteturaDesafio.Core.Domain.Entities;
 using ArquiteturaDesafio.Core.Domain.ValueObjects;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using ArquiteturaDesafio.Core.Domain.Entities;
 
 namespace ArquiteturaDesafio.Application.UseCases.Commands.Product.UpdateProduct;
 
@@ -29,6 +30,10 @@ public class UpdateProductHandler :
     {
 
         Entities.Product product = await _productRepository.Get(request.Id, cancellationToken);
+        if (product is null)
+        {
+            throw new KeyNotFoundException("Produto não encontrado");
+        }
         product.Update(request.Name, request.Price);
         _productRepository.Update(product);
 

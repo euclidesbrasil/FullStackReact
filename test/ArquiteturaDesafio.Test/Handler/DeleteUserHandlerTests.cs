@@ -42,7 +42,6 @@ namespace ArquiteturaDesafio.Tests.Application.Handlers
             // Assert
             _userRepository.Received().Delete(user);
             await _unitOfWork.Received().Commit(CancellationToken.None);
-            _mapper.Received().Map<DeleteUserResponse>("user");
         }
 
         [Fact]

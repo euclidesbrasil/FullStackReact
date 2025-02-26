@@ -32,6 +32,17 @@ namespace ArquiteturaDesafio.Infrastructure.Persistence.SQLServer.Seed
 
                 );
 
+                context.Products.AddRange(
+                    new Entities.Product("Product 1", 100.90M),
+                    new Entities.Product("Product 2", 200.10M),
+                    new Entities.Product("Product 3", 300.30M)
+                );
+
+                context.Customers.AddRange(
+                    new Entities.Customer("Cliente 1", new Core.Domain.ValueObjects.InfoContact("email1@email.com", "988909090")),
+                    new Entities.Customer("Cliente 2", new Core.Domain.ValueObjects.InfoContact("email2@email.com", "988907777")),
+                    new Entities.Customer("Cliente 3", new Core.Domain.ValueObjects.InfoContact("email2@email.com", "988900000"))
+                );
                 context.SaveChanges();
             }
         }

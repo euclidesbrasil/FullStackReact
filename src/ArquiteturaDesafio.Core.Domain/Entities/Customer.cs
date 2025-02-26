@@ -10,6 +10,17 @@ namespace ArquiteturaDesafio.Core.Domain.Entities
 {
     public class Customer: BaseEntity
     {
+        public Customer()
+        {
+            Identification = new InfoContact();
+        }
+
+        public Customer(string name, InfoContact infoContact)
+        {
+            Name = name;
+            Identification = infoContact;
+        }
+
         public string Name { get; set; }
        
         public InfoContact Identification { get; set; }

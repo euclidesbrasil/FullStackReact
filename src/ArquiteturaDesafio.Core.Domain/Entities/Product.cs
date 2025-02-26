@@ -21,6 +21,14 @@ namespace ArquiteturaDesafio.Core.Domain.Entities
            
         }
 
+        public Product(string title, decimal price, Guid id)
+        {
+            Id = id;
+            Name = title;
+            Price = price;
+
+        }
+
         public void Update(string title, decimal price)
         {
             Name = title;

@@ -11,6 +11,7 @@ using ArquiteturaDesafio.Application.UseCases.Commands.User.CreateUser;
 using ArquiteturaDesafio.Application.UseCases.Commands.User.UpdateUser;
 using ArquiteturaDesafio.Core.Domain.Enum;
 using ArquiteturaDesafio.Core.Application.UseCases.Queries.GetUsersById;
+using System.Net;
 namespace ArquiteturaDesafio.Test.Integration
 {
     public class UsersControllerIntegrationTests
@@ -138,10 +139,8 @@ namespace ArquiteturaDesafio.Test.Integration
             var response = await _client.PutAsync($"/Users?id={_idCreated}", content);
             response.EnsureSuccessStatusCode();
 
-            var responseString = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<UpdateUserResponse>(responseString, _options);
 
-            Assert.NotNull(result);
+            Assert.True(response.StatusCode == HttpStatusCode.NoContent);
         }
 
         [Fact]

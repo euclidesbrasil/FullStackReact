@@ -28,6 +28,10 @@ public class UpdateCustomerHandler :
     {
 
         var custumer = await _customerRepository.Get(request.Id, cancellationToken);
+        if(custumer is null)
+        {
+            throw new KeyNotFoundException("Cliente não encontrado");
+        }
         custumer.Update(request.Name, new Core.Domain.ValueObjects.InfoContact(request.Identification.Email, request.Identification.Phone));
         await _unitOfWork.Commit(cancellationToken);
         return new UpdateCustomerResponse("Cliente salvo com sucesso");
