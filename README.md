@@ -13,7 +13,7 @@ Esta API fornece recursos para gerenciar autenticação, pedidos e as leituras v
 
 ## 🗉 Pré-requisitos
 
-Clone este projeto usando a URL: [https://github.com/euclidesbrasil/FullStackReact](https://github.com/euclidesbrasil/FullStackReact)
+Clone este projeto usando a URL: [https://github.com/euclidesbrasil/FullStackReact.git](https://github.com/euclidesbrasil/FullStackReact.git)
 
 Antes de baixar o projeto, certifique-se de ter instalado:
 
